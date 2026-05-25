@@ -1,0 +1,12 @@
+{
+  "name": "yatraai",
+  "private": true,
+  "scripts": {
+    "dev:web": "npm --prefix apps/web run dev",
+    "build:web": "npm --prefix apps/web run build",
+    "preview:web": "npm --prefix apps/web run preview",
+    "dev:api": "cd apps/api && uvicorn app.main:app --reload",
+    "install:web": "npm --prefix apps/web install",
+    "install:api": "cd apps/api && pip install -r requirements.txt"
+  }
+}

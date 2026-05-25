@@ -1,0 +1,3 @@
+# React frontend does not use Python requirements.
+# This file is intentionally added per project request.
+
