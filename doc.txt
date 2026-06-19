@@ -1,0 +1,180 @@
+Document: YatraAI — What was done so far & current errors
+
+1) Understanding of the task (from this session)
+- Goal: create a document summarizing what we did till now, list the current errors facing, and write it into doc.txt.
+- Approach used: inspected the repository (read project README and key backend/frontend files) to infer implemented functionality and spot potential issues.
+
+2) What was examined / done in the repo (code walkthrough)
+2.1 Root README
+- Read README.md to understand project scope and architecture:
+  - Frontend: React (Vite), Leaflet maps, Axios, jsPDF PDF export, Tailwind CSS via CDN.
+  - Backend: FastAPI, SQLAlchemy, SQLite, JWT (python-jose), Pydantic.
+  - AI: OpenAI GPT-3.5 for trip itinerary generation.
+  - Weather: OpenWeatherMap.
+  - Key features: Auth, AI trip planner, weather, interactive map, expense tracker, PDF export, trip history.
+
+2.2 Backend (FastAPI)
+- Loaded core bootstrapping (backend/app/main.py):
+  - Creates DB tables on startup (Base.metadata.create_all).
+  - Configures CORS for localhost:5173 and localhost:3000.
+  - Includes routers: auth, trips, weather, expenses.
+
+- Security (backend/app/core/security.py):
+  - Implements SHA256 password hashing (custom “sha256$<hexdigest>” scheme).
+  - Implements JWT token creation with jose.jwt.
+  - Implements get_current_user via OAuth2PasswordBearer (tokenUrl=/auth/login), decoding JWT using settings.
+
+- Configuration (backend/app/core/config.py):
+  - Uses pydantic-settings Settings with defaults and optional .env file.
+
+- Data layer (models / schemas / repos):
+  - backend/app/models/models.py
+    - User: id, name, email, password_hash, created_at, relationship to Trip.
+    - Trip: destination, budget, start_date, end_date, travelers, interests, itinerary_json, relationships to User and Expense.
+    - Expense: trip_id, title, amount, category, expense_date.
+  - backend/app/schemas/*
+    - TripCreate/TripOut; ExpenseCreate/ExpenseUpdate/ExpenseOut; UserCreate/UserLogin/UserOut/Token.
+  - backend/app/database/db.py
+    - SQLite engine and session factory.
+
+- Auth API (backend/app/api/auth.py)
+  - POST /auth/register: creates user if email not already registered.
+  - POST /auth/login: verifies password and returns JWT.
+  - GET /auth/me: returns current authenticated user.
+
+- Trips API (backend/app/api/trips.py)
+  - POST /trips/create:
+    - Calls generate_itinerary(...) (OpenAI) to produce itinerary JSON.
+    - If any exception occurs, uses a fallback empty itinerary.
+    - Persists trip with itinerary_json.
+  - GET /trips (list trips for user).
+  - GET /trips/{trip_id} (single trip, user-scoped).
+  - DELETE /trips/{trip_id} (user-scoped deletion).
+
+- Expenses API (backend/app/api/expenses.py)
+  - POST /expenses (adds expense to a trip after confirming trip belongs to current user).
+  - GET /expenses/{trip_id} (lists expenses for trip with ownership check).
+  - PUT /expenses/{expense_id} (updates expense) — note: ownership check is not visible in router.
+  - DELETE /expenses/{expense_id} (deletes expense) — note: ownership check is not visible in router.
+
+- Weather API (backend/app/api/weather.py)
+  - GET /weather/{city}: calls weather_service.get_weather(city), returns HTTP 404 on exceptions.
+
+- Services
+  - backend/app/services/ai_service.py
+    - Builds a prompt instructing OpenAI to return ONLY JSON in a fixed structure.
+    - Uses OpenAI client chat.completions.create with model="gpt-3.5-turbo".
+    - Strips code blocks if wrapped in ```json or ```.
+    - Returns json.loads(content).
+  - backend/app/services/weather_service.py
+    - Uses httpx.AsyncClient.
+    - Calls OpenWeatherMap current weather and 5-day forecast.
+    - Aggregates forecast list into a per-day map and returns first 5 days.
+
+- Frontend examined
+  - frontend/package.json: confirms js dependencies (React 19.x, react-router-dom v7, react-leaflet v5, jspdf v4.2.1).
+  - frontend/src/context/AuthContext.jsx
+    - Persists token and user to localStorage.
+  - frontend/src/utils/pdfExport.js
+    - Exports a PDF with trip details, weather summary, itinerary (days/places/activities/timing/cost/tips), hotels, flights, budget summary.
+
+3) Inferred current errors / likely issues (from code inspection)
+Important: these are “potential errors” inferred from static inspection of the code; they may or may not match the exact runtime issues the team is currently seeing.
+
+3.1 Expense ownership not enforced on update/delete
+- File: backend/app/api/expenses.py and backend/app/repositories/expense_repo.py
+- Observation:
+  - Router uses current_user but does not verify the expense being updated/deleted belongs to the current user’s trip.
+  - Repository functions update_expense/delete_expense query Expense by id only.
+- Impact:
+  - Any authenticated user could update/delete any expense if they know the expense_id.
+- Severity: Security issue (data integrity/confidentiality).
+
+3.2 Unused / redundant imports and minor code issues
+- File: backend/app/api/trips.py
+  - repository imports include get_trips_by_user, get_trip, delete_trip and schema imports used.
+  - There is an unused import of json.
+- Severity: Low (lint/runtime not affected).
+
+3.3 Password hashing mismatch with passlib expectations
+- requirements.txt includes passlib[bcrypt], but backend/app/core/security.py does custom sha256-based hashing.
+- Observation:
+  - Not an immediate runtime error, but inconsistent with dependency intent.
+- Impact:
+  - If the project previously used passlib/bcrypt, existing user hashes might not verify.
+- Severity: Medium depending on migration history.
+
+3.4 JWT payload types / expiration handling
+- File: backend/app/core/security.py
+- Observation:
+  - create_access_token sets "exp" as a datetime object; jose/jwt usually accepts numeric timestamps or datetimes depending on library.
+  - If tokens fail decode/expiry validation, users may get 401.
+- Severity: Medium (depends on actual runtime behavior) .
+
+3.5 Weather and AI failure paths
+- Weather:
+  - backend/app/api/weather.py catches any Exception and maps to 404.
+  - If API key is missing/invalid, it will return 404 with “Weather data not found…”.
+- AI:
+  - backend/app/api/trips.py catches any Exception and uses fallback itinerary.
+  - This can hide real errors (OpenAI response format errors, JSON parsing errors, network issues).
+- Severity: Low-to-medium (masking failures).
+
+3.6 Potential mismatch between frontend expectations and backend schema types
+- Trip dates are stored as strings in DB and schema expects str fields (TripCreate), while TripOut returns created_at as datetime.
+- If frontend expects date objects or specific formats, rendering might break.
+- Severity: Low-to-medium (depends on frontend code).
+
+4) “Till now” summary of what was completed
+- Read README.md to capture intended architecture and features.
+- Read and analyzed key backend modules:
+  - main.py (app wiring, CORS, routers, DB init)
+  - core/config.py (settings)
+  - core/security.py (hashing & JWT auth)
+  - api/auth.py, api/trips.py, api/expenses.py, api/weather.py
+  - services/ai_service.py and services/weather_service.py
+  - database/db.py, models/models.py, repositories/trip_repo.py, repositories/expense_repo.py, repositories/user_repo.py
+  - schemas for Trip, Expense, User
+- Read some frontend modules:
+  - AuthContext (token/user storage)
+  - pdfExport (PDF generation content)
+
+5) Next actions (not executed here)
+- Verify runtime errors by running backend/frontend tests or checking logs.
+- Add/confirm ownership checks for expense update/delete.
+- Run formatter/linter to catch unused imports.
+- If JWT errors occur, ensure token exp is encoded as a Unix timestamp and decode uses correct settings.
+
+6) Additional session — errors currently (as of latest code inspection)
+6.1 JSON response parsing fragility (AI itinerary)
+- File: backend/app/services/ai_service.py
+- Observation:
+  - Assumes the OpenAI response content contains valid JSON after stripping code fences.
+  - If the model returns malformed JSON or an unexpected structure, json.loads(content) will raise and the caller (trips endpoint) will silently fall back.
+- Current symptom pattern:
+  - Trips may be created but with empty days/hotels/flights due to fallback.
+
+6.2 Expense update/delete lack of user/ownership validation
+- Files: backend/app/api/expenses.py, backend/app/repositories/expense_repo.py
+- Observation:
+  - PUT/DELETE endpoints only load Expense by expense_id (repository-level) without verifying that Expense.trip_id belongs to current_user.
+- Current symptom pattern:
+  - If a user guesses another expense_id, they can modify/delete it.
+
+6.3 Potential type/field mismatch risks between frontend and backend
+- Files:
+  - backend/app/schemas/trip.py (start_date/end_date are str in TripCreate)
+  - frontend pages/components consume those values for display (date formatting assumed).
+- Observation:
+  - Backend stores dates as strings; frontend may expect specific formats.
+- Current symptom pattern:
+  - UI may display incorrect date formatting or break if code expects Date objects.
+
+6.4 Weather endpoint is “404 on any failure”
+- File: backend/app/api/weather.py
+- Observation:
+  - It converts all exceptions into a 404.
+- Current symptom pattern:
+  - Even auth/key/network failures appear as “Weather data not found”, making debugging harder.
+
+
