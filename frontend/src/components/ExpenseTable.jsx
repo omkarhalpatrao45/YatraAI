@@ -17,8 +17,8 @@ export default function ExpenseTable({ expenses, onEdit, onDelete, showTrip = fa
 
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-100 text-left text-sm">
-        <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-400">
+      <table className="min-w-full divide-y divide-gray-100 bg-white dark:divide-zinc-800 dark:bg-zinc-950 text-left text-sm">
+        <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-400 dark:bg-zinc-900 dark:text-zinc-400">
           <tr>
             <th className="px-4 py-3 font-semibold">Expense</th>
             {showTrip && <th className="px-4 py-3 font-semibold">Trip</th>}
@@ -28,9 +28,9 @@ export default function ExpenseTable({ expenses, onEdit, onDelete, showTrip = fa
             {showActions && <th className="px-4 py-3 text-right font-semibold">Actions</th>}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100 bg-white">
+        <tbody className="divide-y divide-gray-100 bg-white dark:divide-zinc-800 dark:bg-zinc-950">
           {expenses.map(expense => (
-            <tr key={expense.id} className="transition-colors hover:bg-gray-50">
+            <tr key={expense.id} className="transition-colors hover:bg-gray-50 dark:hover:bg-zinc-900">
               <td className="px-4 py-3 font-medium text-textDark">{expense.title}</td>
               {showTrip && <td className="px-4 py-3 text-gray-500">{expense.trip_destination || 'Selected trip'}</td>}
               <td className="px-4 py-3">

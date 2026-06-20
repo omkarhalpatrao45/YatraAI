@@ -228,14 +228,14 @@ export default function ExpenseTracker() {
             </button>
           )}
           <h1 className="text-2xl font-bold text-textDark">Expense Tracker</h1>
-          <p className="text-sm text-gray-400">{selectedTrip?.destination || 'Select a trip to manage spending'}</p>
+          <p className="text-sm text-gray-400 dark:text-zinc-400">{selectedTrip?.destination || 'Select a trip to manage spending'}</p>
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row">
           <select
             value={selectedTripId}
             onChange={handleTripChange}
-            className="rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            className="rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:text-zinc-100 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
           >
             {trips.map(trip => (
               <option key={trip.id} value={trip.id}>{trip.destination}</option>
@@ -305,7 +305,7 @@ export default function ExpenseTracker() {
                 type="text"
                 value={form.title}
                 onChange={event => updateField('title', event.target.value)}
-                className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary ${errors.title ? 'border-red-300' : 'border-gray-200'}`}
+                className={`w-full rounded-lg border px-3 py-2 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary ${errors.title ? 'border-red-300 dark:border-red-500/50' : 'border-gray-200 dark:border-zinc-700'}`}
                 placeholder="Dinner, train tickets, museum pass"
               />
             </Field>
@@ -316,7 +316,7 @@ export default function ExpenseTracker() {
                 step="0.01"
                 value={form.amount}
                 onChange={event => updateField('amount', event.target.value)}
-                className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary ${errors.amount ? 'border-red-300' : 'border-gray-200'}`}
+                className={`w-full rounded-lg border px-3 py-2 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary ${errors.amount ? 'border-red-300 dark:border-red-500/50' : 'border-gray-200 dark:border-zinc-700'}`}
                 placeholder="0.00"
               />
             </Field>
@@ -324,7 +324,7 @@ export default function ExpenseTracker() {
               <select
                 value={form.category}
                 onChange={event => updateField('category', event.target.value)}
-                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:text-zinc-100 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 {EXPENSE_CATEGORIES.map(category => <option key={category}>{category}</option>)}
               </select>
@@ -334,7 +334,7 @@ export default function ExpenseTracker() {
                 type="date"
                 value={form.expense_date}
                 onChange={event => updateField('expense_date', event.target.value)}
-                className={`w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary ${errors.expense_date ? 'border-red-300' : 'border-gray-200'}`}
+                className={`w-full rounded-lg border px-3 py-2 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary ${errors.expense_date ? 'border-red-300 dark:border-red-500/50' : 'border-gray-200 dark:border-zinc-700'}`}
               />
             </Field>
             <div className="flex flex-wrap gap-2 sm:col-span-2">
@@ -354,7 +354,7 @@ export default function ExpenseTracker() {
                   setErrors({})
                   setForm(emptyForm)
                 }}
-                className="flex items-center gap-1 rounded-lg border border-gray-200 px-4 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50"
+                className="flex items-center gap-1 rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2 text-sm text-gray-600 dark:text-zinc-200 transition-colors hover:bg-gray-50 dark:hover:bg-zinc-800"
               >
                 <X className="h-4 w-4" />
                 Cancel
@@ -382,7 +382,7 @@ export default function ExpenseTracker() {
 function Field({ label, error, children }) {
   return (
     <div>
-      <label className="mb-1 block text-xs font-medium text-gray-600">{label}</label>
+      <label className="mb-1 block text-xs font-medium text-gray-600 dark:text-zinc-300">{label}</label>
       {children}
       {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
     </div>

@@ -70,7 +70,7 @@ export default function TripHistory() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-textDark">Trip History</h1>
-          <p className="text-sm text-gray-400">{trips.length} trip{trips.length === 1 ? '' : 's'} planned</p>
+          <p className="text-sm text-gray-400 dark:text-zinc-400">{trips.length} trip{trips.length === 1 ? '' : 's'} planned</p>
         </div>
         <button
           type="button"
@@ -84,21 +84,21 @@ export default function TripHistory() {
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="relative min-w-0 flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-zinc-400" />
           <input
             type="text"
             value={search}
             onChange={event => setSearch(event.target.value)}
             placeholder="Search destinations or interests"
-            className="w-full rounded-lg border border-gray-200 py-2.5 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:text-zinc-100 py-2.5 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
         <div className="relative sm:w-56">
-          <Filter className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Filter className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-zinc-400" />
           <select
             value={sortBy}
             onChange={event => setSortBy(event.target.value)}
-            className="w-full rounded-lg border border-gray-200 bg-white py-2.5 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full rounded-lg border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 dark:text-zinc-100 py-2.5 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>

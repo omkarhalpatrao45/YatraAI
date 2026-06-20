@@ -11,8 +11,8 @@ export default function WeatherCard({ weather, destination }) {
     return (
       <Card className="p-6 text-center">
         <CloudSun className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-        <p className="font-medium text-gray-500">Weather is unavailable for {destination}</p>
-        <p className="mt-1 text-xs text-gray-400">The backend weather service did not return a forecast.</p>
+        <p className="font-medium text-gray-500 dark:text-zinc-300">Weather is unavailable for {destination}</p>
+        <p className="mt-1 text-xs text-gray-400 dark:text-zinc-400">The backend weather service did not return a forecast.</p>
       </Card>
     )
   }
@@ -41,11 +41,11 @@ export default function WeatherCard({ weather, destination }) {
           )}
         </div>
 
-        <div className="mt-5 grid grid-cols-1 gap-3 border-t border-gray-100 pt-4 sm:grid-cols-3">
+        <div className="mt-5 grid grid-cols-1 gap-3 border-t border-gray-100 dark:border-zinc-700 pt-4 sm:grid-cols-3">
           {metrics.map(({ icon: Icon, label, value, color }) => (
-            <div key={label} className="rounded-lg bg-gray-50 p-3 text-center">
+            <div key={label} className="rounded-lg bg-gray-50 dark:bg-zinc-950 p-3 text-center">
               <Icon className={`mx-auto mb-1 h-5 w-5 ${color}`} />
-              <p className="text-xs text-gray-400">{label}</p>
+              <p className="text-xs text-gray-400 dark:text-zinc-400">{label}</p>
               <p className="text-sm font-semibold text-textDark">{value}</p>
             </div>
           ))}
@@ -57,8 +57,8 @@ export default function WeatherCard({ weather, destination }) {
           <h4 className="mb-4 font-semibold text-textDark">5-Day Forecast</h4>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
             {weather.forecast.slice(0, 5).map(day => (
-              <div key={day.date} className="rounded-lg bg-blue-50 p-3 text-center">
-                <p className="text-xs font-medium text-gray-500">
+              <div key={day.date} className="rounded-lg bg-blue-50 dark:bg-blue-500/10 p-3 text-center">
+                <p className="text-xs font-medium text-gray-500 dark:text-zinc-400">
                   {new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })}
                 </p>
                 {day.icon && (
@@ -69,7 +69,7 @@ export default function WeatherCard({ weather, destination }) {
                   />
                 )}
                 <p className="text-sm font-semibold text-primary">{readNumber(day.temp_max)} C</p>
-                <p className="text-xs text-gray-400">{readNumber(day.temp_min)} C</p>
+                <p className="text-xs text-gray-400 dark:text-zinc-400">{readNumber(day.temp_min)} C</p>
               </div>
             ))}
           </div>

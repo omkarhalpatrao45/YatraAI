@@ -61,7 +61,7 @@ export function exportTripPDF(trip, itinerary = {}, weather = null) {
     addSection('Day-wise Itinerary')
     itinerary.days.forEach(day => {
       addLine(`Day ${day.day}: ${day.theme || 'Trip Plan'} (${day.date || 'Date not set'})`, 14, 11, 'bold')
-      if (day.places?.length) addLine(`Places: ${day.places.join(', ')}`)
+      if (day.places?.length) addLine(`Places: ${day.places.map(p => (typeof p === 'object' ? p.name : p)).join(', ')}`)
       if (day.activities?.length) addLine(`Activities: ${day.activities.join(', ')}`)
       if (day.timing?.length) day.timing.forEach(item => addLine(`- ${item}`, 18, 9))
       if (day.estimated_cost) addLine(`Estimated Cost: ${money(day.estimated_cost)}`)

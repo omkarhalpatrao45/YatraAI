@@ -9,10 +9,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
+        darkMode: 'class',
         theme: {
           extend: {
             colors: {
-              primary: '#2563EB',
+              primary: '#3B82F6',
               secondary: '#0EA5E9',
               background: '#F8FAFC',
               textDark: '#1E293B',
@@ -22,7 +23,9 @@
       }
     </script>
     <style>
-      body { background-color: #F8FAFC; color: #1E293B; }
+      body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #F8FAFC; color: #1E293B; }
+      html.dark body { background-color: #09090b; color: #f4f4f5; }
+      html.dark { background-color: #09090b; color-scheme: dark; }
       .leaflet-container { z-index: 1; }
     </style>
   </head>

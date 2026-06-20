@@ -25,8 +25,8 @@ export default function Profile() {
           </div>
           <div>
             <h2 className="text-xl font-bold text-textDark">{user?.name}</h2>
-            <p className="text-gray-400 text-sm">{user?.email}</p>
-            <span className="inline-flex items-center gap-1 mt-1 text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
+            <p className="text-gray-400 dark:text-zinc-400 text-sm">{user?.email}</p>
+            <span className="inline-flex items-center gap-1 mt-1 text-xs text-green-600 dark:text-green-300 bg-green-50 dark:bg-green-500/10 px-2 py-0.5 rounded-full">
               <Shield className="w-3 h-3" /> Verified Account
             </span>
           </div>
@@ -38,8 +38,8 @@ export default function Profile() {
             { icon: Mail, label: 'Email Address', value: user?.email },
             { icon: Calendar, label: 'Member Since', value: user?.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A' },
           ].map(({ icon: Icon, label, value }) => (
-            <div key={label} className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
-              <div className="w-9 h-9 bg-white rounded-lg flex items-center justify-center border border-gray-200">
+            <div key={label} className="flex items-center gap-4 p-3 bg-gray-50 dark:bg-zinc-900 rounded-lg">
+              <div className="w-9 h-9 bg-white dark:bg-zinc-900 rounded-lg flex items-center justify-center border border-gray-200 dark:border-zinc-700">
                 <Icon className="w-4 h-4 text-primary" />
               </div>
               <div>
@@ -55,7 +55,7 @@ export default function Profile() {
         <h3 className="font-semibold text-textDark mb-4">Account Actions</h3>
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2 w-full px-4 py-3 bg-red-50 text-red-600 rounded-lg font-medium text-sm hover:bg-red-100 transition-colors"
+          className="flex items-center gap-2 w-full px-4 py-3 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-300 rounded-lg font-medium text-sm hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors"
         >
           <LogOut className="w-4 h-4" />
           Sign Out

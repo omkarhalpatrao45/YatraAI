@@ -23,13 +23,32 @@ export default function Dashboard() {
 
     async function loadDashboard() {
       try {
+        console.log('🔍 [Dashboard] Starting data load...')
+
         const tripData = await listTrips()
+        console.log('📥 [Dashboard] Received trip data:', tripData)
+        console.log('   Type:', typeof tripData)
+        console.log('   Is array:', Array.isArray(tripData))
+        console.log('   Length:', Array.isArray(tripData) ? tripData.length : 'N/A')
+        if (Array.isArray(tripData) && tripData.length > 0) {
+          console.log('   First item:', tripData[0])
+          console.log('   Keys:', Object.keys(tripData[0]))
+        }
+
         const expenses = await listExpensesForTrips(tripData)
+        console.log('📥 [Dashboard] Received expenses:', expenses)
+
         if (!active) return
 
+        console.log('💾 [Dashboard] Setting state with', Array.isArray(tripData) ? tripData.length : 'invalid', 'trips')
         setTrips(tripData)
         setExpenseTotal(expenses.reduce((sum, expense) => sum + Number(expense.amount || 0), 0))
       } catch (error) {
+        console.error('❌ [Dashboard] Error loading data:', error)
+        console.error('   Message:', error.message)
+        console.error('   URL:', error.config?.url)
+        console.error('   Status:', error.response?.status)
+        console.error('   Data:', error.response?.data)
         if (active) toast.error(getApiError(error, 'Failed to load dashboard data.'))
       } finally {
         if (active) setLoading(false)
@@ -51,8 +70,8 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-textDark">Dashboard</h1>
-        <p className="text-sm text-gray-400">Your travel planning overview</p>
+        <h1 className="text-2xl font-bold text-textDark dark:text-zinc-100">Dashboard</h1>
+        <p className="text-sm text-gray-400 dark:text-zinc-500">Your travel planning overview</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -64,8 +83,8 @@ export default function Dashboard() {
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-textDark">Recent Trips</h2>
-          <p className="text-sm text-gray-400">Latest AI-generated itineraries</p>
+          <h2 className="text-lg font-semibold text-textDark dark:text-zinc-100">Recent Trips</h2>
+          <p className="text-sm text-gray-400 dark:text-zinc-500">Latest AI-generated itineraries</p>
         </div>
         <button
           type="button"
@@ -103,13 +122,13 @@ export default function Dashboard() {
       )}
 
       <Card className="p-5">
-        <h3 className="mb-4 text-base font-semibold text-textDark">Quick Actions</h3>
+        <h3 className="mb-4 text-base font-semibold text-textDark dark:text-zinc-100">Quick Actions</h3>
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {[
-            { label: 'Plan Trip', icon: PlusCircle, to: '/create-trip', color: 'bg-blue-50 text-primary' },
-            { label: 'Trip History', icon: MapPin, to: '/trips', color: 'bg-purple-50 text-purple-600' },
-            { label: 'Expenses', icon: ReceiptText, to: '/expenses', color: 'bg-green-50 text-green-600' },
-            { label: 'Profile', icon: Plane, to: '/profile', color: 'bg-orange-50 text-orange-600' },
+            { label: 'Plan Trip', icon: PlusCircle, to: '/create-trip', color: 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400' },
+            { label: 'Trip History', icon: MapPin, to: '/trips', color: 'bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400' },
+            { label: 'Expenses', icon: ReceiptText, to: '/expenses', color: 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' },
+            { label: 'Profile', icon: Plane, to: '/profile', color: 'bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400' },
           ].map(({ label, icon: Icon, to, color }) => (
             <Link
               key={label}

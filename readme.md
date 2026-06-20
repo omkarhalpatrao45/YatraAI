@@ -44,7 +44,7 @@ uvicorn app.main:app --reload
 ### 2) Frontend (React)
 
 ```bash
-cd apps/web
+cd frontend
 npm install
 npm run dev
 ```
@@ -87,5 +87,5 @@ At the repo root, `package.json` includes helper scripts such as:
 
 ## License
 
-Add your license information here.
+Add your license information here.   
 

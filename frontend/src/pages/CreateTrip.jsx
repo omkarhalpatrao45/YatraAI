@@ -79,7 +79,7 @@ export default function CreateTrip() {
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-textDark">Plan Your Trip</h1>
-        <p className="text-sm text-gray-400">Enter the core details and generate an itinerary.</p>
+        <p className="text-sm text-gray-400 dark:text-zinc-400">Enter the core details and generate an itinerary.</p>
       </div>
 
       <Card className="p-5 sm:p-6">
@@ -94,9 +94,8 @@ export default function CreateTrip() {
               value={form.destination}
               onChange={event => updateField('destination', event.target.value)}
               aria-invalid={Boolean(errors.destination)}
-              className={`w-full rounded-lg border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary ${
-                errors.destination ? 'border-red-300' : 'border-gray-200'
-              }`}
+              className={`w-full rounded-lg border bg-white text-gray-900 dark:bg-zinc-900 dark:text-zinc-100 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary ${errors.destination ? 'border-red-300' : 'border-gray-200 dark:border-zinc-700'
+                }`}
               placeholder="Paris, France"
             />
             {errors.destination && <p className="mt-1 text-xs text-red-500">{errors.destination}</p>}
@@ -113,9 +112,8 @@ export default function CreateTrip() {
                 value={form.start_date}
                 onChange={event => updateField('start_date', event.target.value)}
                 aria-invalid={Boolean(errors.start_date)}
-                className={`w-full rounded-lg border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary ${
-                  errors.start_date ? 'border-red-300' : 'border-gray-200'
-                }`}
+                className={`w-full rounded-lg border bg-white text-gray-900 dark:bg-zinc-900 dark:text-zinc-100 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary ${errors.start_date ? 'border-red-300' : 'border-gray-200 dark:border-zinc-700'
+                  }`}
               />
               {errors.start_date && <p className="mt-1 text-xs text-red-500">{errors.start_date}</p>}
             </div>
@@ -129,9 +127,8 @@ export default function CreateTrip() {
                 value={form.end_date}
                 onChange={event => updateField('end_date', event.target.value)}
                 aria-invalid={Boolean(errors.end_date)}
-                className={`w-full rounded-lg border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary ${
-                  errors.end_date ? 'border-red-300' : 'border-gray-200'
-                }`}
+                className={`w-full rounded-lg border bg-white text-gray-900 dark:bg-zinc-900 dark:text-zinc-100 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary ${errors.end_date ? 'border-red-300' : 'border-gray-200 dark:border-zinc-700'
+                  }`}
               />
               {errors.end_date && <p className="mt-1 text-xs text-red-500">{errors.end_date}</p>}
             </div>
@@ -150,9 +147,8 @@ export default function CreateTrip() {
                 value={form.budget}
                 onChange={event => updateField('budget', event.target.value)}
                 aria-invalid={Boolean(errors.budget)}
-                className={`w-full rounded-lg border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary ${
-                  errors.budget ? 'border-red-300' : 'border-gray-200'
-                }`}
+                className={`w-full rounded-lg border bg-white text-gray-900 dark:bg-zinc-900 dark:text-zinc-100 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary ${errors.budget ? 'border-red-300' : 'border-gray-200 dark:border-zinc-700'
+                  }`}
                 placeholder="2000"
               />
               {errors.budget && <p className="mt-1 text-xs text-red-500">{errors.budget}</p>}
@@ -169,9 +165,8 @@ export default function CreateTrip() {
                 value={form.travelers}
                 onChange={event => updateField('travelers', event.target.value)}
                 aria-invalid={Boolean(errors.travelers)}
-                className={`w-full rounded-lg border px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary ${
-                  errors.travelers ? 'border-red-300' : 'border-gray-200'
-                }`}
+                className={`w-full rounded-lg border bg-white text-gray-900 dark:bg-zinc-900 dark:text-zinc-100 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary ${errors.travelers ? 'border-red-300' : 'border-gray-200 dark:border-zinc-700'
+                  }`}
               />
               {errors.travelers && <p className="mt-1 text-xs text-red-500">{errors.travelers}</p>}
             </div>
@@ -189,9 +184,8 @@ export default function CreateTrip() {
                     key={interest}
                     type="button"
                     onClick={() => toggleInterest(interest)}
-                    className={`rounded-full px-3 py-1.5 text-sm font-medium transition-all ${
-                      active ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                    }`}
+                    className={`rounded-full px-3 py-1.5 text-sm font-medium transition-all ${active ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700'
+                      }`}
                   >
                     {interest}
                   </button>

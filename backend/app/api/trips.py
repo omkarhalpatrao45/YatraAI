@@ -12,6 +12,7 @@ import json
 
 router = APIRouter(prefix="/trips", tags=["trips"])
 
+
 @router.post("/create", response_model=TripOut)
 def create_new_trip(trip: TripCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     try:
@@ -19,15 +20,24 @@ def create_new_trip(trip: TripCreate, db: Session = Depends(get_db), current_use
             trip.destination, trip.budget, trip.start_date,
             trip.end_date, trip.travelers, trip.interests
         )
-    except Exception as e:
+    except ValueError as e:
+        # Configuration error (missing API key)
         import traceback
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail=f"AI generation failed: {str(e)}")
+        raise HTTPException(status_code=503, detail=str(e))
+    except Exception as e:
+        # Other errors (API connection, parsing, etc.)
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500, detail=f"AI generation failed: {str(e)}")
     return create_trip(db, trip, current_user.id, itinerary)
+
 
 @router.get("", response_model=List[TripOut])
 def list_trips(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     return get_trips_by_user(db, current_user.id)
+
 
 @router.get("/{trip_id}", response_model=TripOut)
 def get_single_trip(trip_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
@@ -35,6 +45,7 @@ def get_single_trip(trip_id: int, db: Session = Depends(get_db), current_user: U
     if not trip:
         raise HTTPException(status_code=404, detail="Trip not found")
     return trip
+
 
 @router.delete("/{trip_id}")
 def remove_trip(trip_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
