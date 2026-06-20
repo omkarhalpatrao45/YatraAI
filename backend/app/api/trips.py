@@ -13,19 +13,16 @@ import json
 router = APIRouter(prefix="/trips", tags=["trips"])
 
 @router.post("/create", response_model=TripOut)
-async def create_new_trip(trip: TripCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+def create_new_trip(trip: TripCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     try:
         itinerary = generate_itinerary(
             trip.destination, trip.budget, trip.start_date,
             trip.end_date, trip.travelers, trip.interests
         )
     except Exception as e:
-        # Fallback itinerary if AI fails
-        itinerary = {
-            "summary": f"Your trip to {trip.destination}",
-            "total_estimated_cost": trip.budget,
-            "days": [], "hotels": [], "flights": []
-        }
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"AI generation failed: {str(e)}")
     return create_trip(db, trip, current_user.id, itinerary)
 
 @router.get("", response_model=List[TripOut])

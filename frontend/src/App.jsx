@@ -1,22 +1,26 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './routes/ProtectedRoute'
 import MainLayout from './layouts/MainLayout'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Dashboard from './pages/Dashboard'
-import CreateTrip from './pages/CreateTrip'
-import TripDetails from './pages/TripDetails'
-import TripHistory from './pages/TripHistory'
-import ExpenseTracker from './pages/ExpenseTracker'
-import Profile from './pages/Profile'
+import LoadingSpinner from './components/LoadingSpinner'
+
+const Login = lazy(() => import('./pages/Login'))
+const Register = lazy(() => import('./pages/Register'))
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const CreateTrip = lazy(() => import('./pages/CreateTrip'))
+const TripDetails = lazy(() => import('./pages/TripDetails'))
+const TripHistory = lazy(() => import('./pages/TripHistory'))
+const ExpenseTracker = lazy(() => import('./pages/ExpenseTracker'))
+const Profile = lazy(() => import('./pages/Profile'))
 
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
+        <Suspense fallback={<LoadingSpinner />}>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -33,6 +37,7 @@ export default function App() {
           </Route>
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
+        </Suspense>
       </BrowserRouter>
     </AuthProvider>
   )

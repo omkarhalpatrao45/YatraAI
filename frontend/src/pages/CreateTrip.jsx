@@ -54,7 +54,7 @@ export default function CreateTrip() {
     if (!validate()) return
 
     setLoading(true)
-    const loadingToast = toast.loading('Generating your AI itinerary...')
+    const loadingToast = toast.loading('Generating your AI itinerary... (this may take ~30s)')
     try {
       const data = await createTrip({
         destination: form.destination.trim(),

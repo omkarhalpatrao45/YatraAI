@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, timezone
-from typing import Optional
+from typing import Optional, Dict
 from jose import JWTError, jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -19,8 +19,8 @@ def hash_password(password: str) -> str:
 def verify_password(plain: str, hashed: str) -> bool:
     return hashed == "sha256$" + sha256(plain.encode("utf-8")).hexdigest()
 
-def create_access_token(data: dict[str, object], expires_delta: Optional[timedelta] = None) -> str:
-    to_encode: dict[str, object] = data.copy()
+def create_access_token(data: Dict[str, object], expires_delta: Optional[timedelta] = None) -> str:
+    to_encode: Dict[str, object] = data.copy()
     expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
